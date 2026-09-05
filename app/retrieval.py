@@ -26,7 +26,7 @@ def get_llm():
         try:
             from langchain_google_genai import ChatGoogleGenerativeAI
             return ChatGoogleGenerativeAI(
-                model="gemini-1.5-flash",
+                model="gemini-3.6-flash",
                 google_api_key=GOOGLE_API_KEY,
                 temperature=0.0
             )
@@ -116,7 +116,19 @@ def query_rag_pipeline(question: str, document_id: Optional[str] = None, top_k: 
         try:
             formatted_prompt = STRICT_QA_PROMPT.format(context=formatted_context, question=question)
             response = llm.invoke(formatted_prompt)
-            answer_text = response.content.strip() if hasattr(response, 'content') else str(response).strip()
+            raw_content = response.content if hasattr(response, 'content') else str(response)
+            if isinstance(raw_content, list):
+                answer_parts = []
+                for part in raw_content:
+                    if isinstance(part, dict) and "text" in part:
+                        answer_parts.append(part["text"])
+                    elif isinstance(part, str):
+                        answer_parts.append(part)
+                    else:
+                        answer_parts.append(str(part))
+                answer_text = "".join(answer_parts).strip()
+            else:
+                answer_text = str(raw_content).strip()
         except Exception as e:
             print(f"Gemini API invocation failed ({e}). Using offline answer engine.")
             answer_text = offline_grounded_answer(question, retrieved_docs)

@@ -40,14 +40,16 @@ def get_embeddings() -> Tuple[Embeddings, str]:
         try:
             from langchain_google_genai import GoogleGenerativeAIEmbeddings
             embeddings = GoogleGenerativeAIEmbeddings(
-                model="models/embedding-001",
+                model="text-embedding-004",
                 google_api_key=GOOGLE_API_KEY
             )
+            # Test embedding query call
+            embeddings.embed_query("test")
             return embeddings, "gemini"
         except Exception as e:
-            print(f"Warning: Failed to initialize GoogleGenerativeAIEmbeddings ({e}). Falling back to local offline embeddings.")
+            print(f"Notice: GoogleGenerativeAIEmbeddings embed_content unavailable ({e}). Using local hash embeddings for FAISS.")
     
-    return OfflineHashEmbeddings(), "offline"
+    return OfflineHashEmbeddings(), "local-embeddings"
 
 
 class VectorStoreManager:
