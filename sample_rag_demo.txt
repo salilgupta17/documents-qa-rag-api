@@ -1,0 +1,3 @@
+The Document Q&A RAG system uses FAISS to perform vector similarity search over chunked document text.
+LangChain orchestrates the retrieval chain and feeds relevant context snippets to the Google Gemini model.
+This system ensures grounded responses with precise source citations including filename and page numbers.

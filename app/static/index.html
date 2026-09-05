@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Document Q&A RAG System</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app-container">
+    <header class="app-header">
+      <div class="logo-area">
+        <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        <h1>Document Q&amp;A <span>RAG API</span></h1>
+      </div>
+      <div class="status-badge" id="system-status">
+        <span class="status-dot"></span>
+        <span id="status-text">Checking System Status...</span>
+      </div>
+    </header>
+
+    <main class="main-content">
+      <!-- Left Panel: Document Management -->
+      <aside class="panel documents-panel">
+        <div class="panel-header">
+          <h2>Knowledge Base Documents</h2>
+          <span class="doc-count" id="doc-count-badge">0 Docs</span>
+        </div>
+
+        <form id="upload-form" class="upload-box">
+          <div class="file-drop-area">
+            <input type="file" id="file-input" accept=".pdf,.txt" required />
+            <div class="drop-text">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="17 8 12 3 7 8"></polyline>
+                <line x1="12" y1="3" x2="12" y2="15"></line>
+              </svg>
+              <span id="file-label">Choose a PDF or TXT file</span>
+            </div>
+          </div>
+          <button type="submit" id="upload-btn" class="btn btn-primary">
+            <span>Upload &amp; Index</span>
+          </button>
+        </form>
+
+        <div id="upload-error" class="error-banner hidden"></div>
+        <div id="upload-success" class="success-banner hidden"></div>
+
+        <div class="documents-list-section">
+          <h3>Ingested Files</h3>
+          <div id="documents-list" class="documents-list">
+            <p class="empty-state">No documents uploaded yet.</p>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Right Panel: Q&A Chat -->
+      <section class="panel chat-panel">
+        <div class="panel-header">
+          <h2>Ask Grounded Questions</h2>
+          <div class="filter-wrapper">
+            <label for="doc-filter">Filter context:</label>
+            <select id="doc-filter">
+              <option value="">All Documents</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="chat-feed" class="chat-feed">
+          <div class="welcome-message">
+            <div class="welcome-icon">💬</div>
+            <h3>Welcome to Document Q&amp;A RAG</h3>
+            <p>Upload your document(s) on the left panel and ask questions below. The system retrieves relevant chunks using FAISS and provides grounded answers with source citations.</p>
+          </div>
+        </div>
+
+        <form id="query-form" class="query-form">
+          <div id="query-error" class="error-banner hidden"></div>
+          <div class="input-row">
+            <textarea id="question-input" rows="2" placeholder="Ask a question about your uploaded documents..." required></textarea>
+            <button type="submit" id="ask-btn" class="btn btn-accent">
+              <span>Ask</span>
+            </button>
+          </div>
+        </form>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
