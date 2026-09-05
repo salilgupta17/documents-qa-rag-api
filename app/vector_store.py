@@ -43,13 +43,18 @@ def get_embeddings() -> Tuple[Embeddings, str]:
                 model="text-embedding-004",
                 google_api_key=GOOGLE_API_KEY
             )
-            # Test embedding query call
             embeddings.embed_query("test")
             return embeddings, "gemini"
-        except Exception as e:
-            print(f"Notice: GoogleGenerativeAIEmbeddings embed_content unavailable ({e}). Using local hash embeddings for FAISS.")
+        except Exception:
+            pass
     
-    return OfflineHashEmbeddings(), "local-embeddings"
+    try:
+        from langchain_community.embeddings import HuggingFaceEmbeddings
+        embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
+        return embeddings, "sentence-transformers"
+    except Exception as e:
+        print(f"Notice: Using offline hash embeddings ({e}).")
+        return OfflineHashEmbeddings(), "local-hash"
 
 
 class VectorStoreManager:
